@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Matrix Spotify</title>
+<style>body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#121212;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px}
+a{color:#1DB954}</style></head><body>
+<div id="m">Spotify yetkisi alindi, cihaza aktariliyor...</div>
+<script>
+// Spotify buraya ?code=...&state=<cihaz IP> ile doner. Kodu ayni ev agindaki cihaza iletiyoruz.
+// (Bu sayfa HTTPS; cihaz HTTP. fetch mixed-content'e takilir, ama tam sayfa yonlendirme serbesttir.)
+const q = new URLSearchParams(location.search);
+const code = q.get('code'), state = q.get('state'), err = q.get('error');
+if (err) {
+  document.getElementById('m').innerHTML = 'Spotify izin vermedi: ' + err + '<br><br>Cihazin sayfasina donup tekrar dene.';
+} else if (code && state && /^[0-9a-zA-Z.\-]+$/.test(state)) {
+  const target = 'http://' + state + '/spotify_cb?code=' + encodeURIComponent(code);
+  document.getElementById('m').innerHTML = 'Cihaza baglaniliyor... Acilmazsa telefonun cihazla ayni WiFi agina bagli oldugundan emin ol.<br><br><a href="' + target + '">Devam</a>';
+  location.href = target;
+} else {
+  document.getElementById('m').innerText = 'Eksik parametre.';
+}
+</script></body></html>
